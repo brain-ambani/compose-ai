@@ -23,9 +23,8 @@ export function authMiddleware(
     console.log("Extracted Token:", token); // Debugging log
     const secretKey = process.env.JWT_SECRET_KEY;
     if (!secretKey) {
-      return res
-        .status(500)
-        .json({ message: "JWT secret key is not configured" });
+      res.status(500).json({ message: "JWT secret key is not configured" });
+      return;
     }
 
     console.log("Verifying Token with Secret:", secretKey);
