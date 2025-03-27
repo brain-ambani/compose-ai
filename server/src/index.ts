@@ -1,16 +1,23 @@
-import express from "express"; // Import the Express framework
+import express from "express";
+import userRouter from "./routes/userRoute";
+import loginRouter from "./routes/loginRoute";
+import protectedRouter from "./routes/protectedRoute";
 
-require("dotenv").config(); // Load environment variables from a .env file into process.env
-const cors = require("cors"); // Import the CORS middleware
-const app = express(); // Create an Express application instance
+require("dotenv").config();
+const cors = require("cors");
+const app = express();
 
-app.use(cors()); // Enable Cross-Origin Resource Sharing (CORS) for all routes
+app.use(cors());
 
-const PORT = process.env.PORT || 8000; // Set the server's port from environment variables or default to 8000
+const PORT = process.env.PORT || 8000;
 
-app.use(express.json()); // Parse incoming JSON requests and make the data available in req.body
+app.use(express.json());
+
+app.use("/api/v1/", userRouter);
+app.use("/api/v1/", loginRouter);
+app.use("/", protectedRouter);
 
 app.listen(PORT, () => {
   // Start the server and listen on the specified port
-  console.log(`Server is running on http://localhost:${PORT}`); // Log a message indicating the server is running
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
