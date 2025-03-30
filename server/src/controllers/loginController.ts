@@ -14,13 +14,21 @@ export async function authorizeUser(req: Request, res: Response) {
   try {
     // check for field validation
     if (!email || !password) {
-      res.status(400).json({ error: "Please fill all fields", data: null });
+      res.status(400).json({
+        error: "Bad Request",
+        message: "All fields are required",
+        data: null,
+      });
       return;
     }
 
     //validate email
     if (!isValidEmail(email)) {
-      res.status(400).json({ error: "Invalid Email Format", data: null });
+      res.status(400).json({
+        error: "Bad Request",
+        message: "Invalid Email Format",
+        data: null,
+      });
       return;
     }
 
@@ -32,7 +40,11 @@ export async function authorizeUser(req: Request, res: Response) {
     });
 
     if (!existingUser) {
-      res.status(403).json({ error: "Invalid credentials", data: null });
+      res.status(403).json({
+        error: "Authentication Error",
+        message: "Invalid credentials",
+        data: null,
+      });
       return;
     }
 
@@ -42,7 +54,11 @@ export async function authorizeUser(req: Request, res: Response) {
       existingUser.password
     );
     if (!isPasswordValid) {
-      res.status(401).json({ error: "Invalid credentials", data: null });
+      res.status(401).json({
+        error: "Authentication Error",
+        message: "Invalid credentials",
+        data: null,
+      });
       return;
     }
 
@@ -53,7 +69,11 @@ export async function authorizeUser(req: Request, res: Response) {
     const result = { ...userWithoutPassword, accessToken };
     res.status(200).json({ result, message: "Login successful" });
     return;
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    res.status(500).json({
+      error: "Internal server error",
+      message: error.message || "Internal server error",
+      data: null,
+    });
   }
 }

@@ -7,36 +7,40 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import axios from "axios";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // Add loading state
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true); // Start loading
-    setMessage(""); // Clear previous messages
+    setIsLoading(true);
+    setMessage("");
     try {
-      console.log("reached here");
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/auth/login",
-        {
-          email,
-          password,
-        }
-      );
+      const response = await fetch("/api/login", {
+        // Call the Next.js API route
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-      localStorage.setItem("accessToken", response.data.result.accessToken);
-      router.push("/dashboard"); // Redirect on success
-    } catch (error) {
-      console.log(error);
-      setMessage("Login failed");
+      const data = await response.json();
+
+      if (response.ok) {
+        router.push("/dashboard"); // Redirect on success
+      } else {
+        setMessage(data.message || "Login failed");
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      setMessage(error.message || "An error occurred");
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false);
     }
   };
 
@@ -57,8 +61,8 @@ const LoginPage = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={cn(
-                  isLoading ? "cursor-not-allowed" : "", // Disable during loading
-                  "transition-colors duration-300" // Smooth transition
+                  isLoading ? "cursor-not-allowed" : "",
+                  "transition-colors duration-300"
                 )}
                 disabled={isLoading}
               />
@@ -84,8 +88,8 @@ const LoginPage = () => {
                 "w-full",
                 isLoading
                   ? "bg-blue-500/70 text-white cursor-not-allowed"
-                  : "bg-blue-500 text-white hover:bg-blue-600", // Conditional styling
-                "transition-all duration-300" // Smooth transition
+                  : "bg-blue-500 text-white hover:bg-blue-600",
+                "transition-all duration-300"
               )}
               disabled={isLoading}
             >

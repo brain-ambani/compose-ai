@@ -3,6 +3,6 @@ import express from "express";
 
 const loginRouter = express.Router();
 
-loginRouter.post("/auth/login", authorizeUser);
+loginRouter.post("/login", authorizeUser);
 
 export default loginRouter;
