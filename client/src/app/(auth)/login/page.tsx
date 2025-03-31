@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -21,7 +22,6 @@ const LoginPage = () => {
     setMessage("");
     try {
       const response = await fetch("/api/login", {
-        // Call the Next.js API route
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,7 +32,7 @@ const LoginPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        router.push("/dashboard"); // Redirect on success
+        router.push("/dashboard");
       } else {
         setMessage(data.message || "Login failed");
       }
@@ -45,7 +45,12 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="flex items-center justify-center min-h-screen bg-gray-100"
+    >
       <Card className="w-[350px] shadow-lg">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-semibold">Login</CardTitle>
@@ -106,9 +111,19 @@ const LoginPage = () => {
               {message}
             </p>
           )}
+          <p className="mt-4 text-center text-sm text-gray-600">
+            Don&apos;t have an account?{" "}
+            <Button
+              variant="link"
+              className="p-0 font-medium"
+              onClick={() => router.push("/register")}
+            >
+              Register
+            </Button>
+          </p>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 };
 

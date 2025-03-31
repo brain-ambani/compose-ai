@@ -6,13 +6,12 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import axios from "axios";
+import { motion } from "framer-motion";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [imageUrl, setImageUrl] = useState(""); /
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -22,18 +21,19 @@ const RegisterPage = () => {
     setIsLoading(true);
     setMessage("");
     try {
-      const response = await axios.post(
+      const response = await fetch(
         "http://localhost:8000/api/v1/auth/register",
         {
-          name,
-          email,
-          password,
-          // imageUrl,
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, email, password }),
         }
       );
-      console.log("Data send successful");
-      setMessage(response.data.message);
-      // Redirect to login after successful registration
+
+      const data = await response.json();
+      setMessage(data.message);
       router.push("/login");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -46,7 +46,12 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="flex items-center justify-center min-h-screen bg-gray-100"
+    >
       <Card className="w-[350px] shadow-lg">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-semibold">Register</CardTitle>
@@ -92,7 +97,6 @@ const RegisterPage = () => {
                 disabled={isLoading}
               />
             </div>
-
             <Button
               type="submit"
               className={cn(
@@ -117,9 +121,19 @@ const RegisterPage = () => {
               {message}
             </p>
           )}
+          <p className="mt-4 text-center text-sm text-gray-600">
+            Already have an account?{" "}
+            <Button
+              variant="link"
+              className="p-0 font-medium"
+              onClick={() => router.push("/login")}
+            >
+              Login
+            </Button>
+          </p>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 };
 
