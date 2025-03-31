@@ -6,9 +6,9 @@ export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
 
-    // Forward the request to your Express backend
+    // Forward the request to Express backend
     const backendResponse = await axios.post(
-      "http://localhost:8000/api/v1/auth/login", // Your Express backend URL
+      "http://localhost:8000/api/v1/auth/login",
       { email, password }
     );
 

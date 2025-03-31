@@ -1,15 +1,33 @@
-"use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, Settings, X } from "lucide-react";
-
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { destroyCookie } from "nookies";
+
+const LogoutButton = () => {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    console.log("LogoutButton: handleLogout called");
+    destroyCookie(null, "accessToken", { path: "/" });
+    router.push("/login");
+  };
+
+  return (
+    <Button onClick={handleLogout} className="hover:cursor-pointer">
+      Sign Out
+    </Button>
+  );
+};
+
 export const Navbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
   return (
     <>
       <nav className="bg-white shadow-md p-4 flex items-center justify-between">
@@ -35,7 +53,7 @@ export const Navbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
           <Button variant="ghost">Features</Button>
           <Button variant="ghost">Pricing</Button>
           <Button variant="ghost">Contact</Button>
-          <Button>Sign Out</Button>
+          <LogoutButton />
         </div>
         <div className="lg:hidden">
           <Button variant="ghost" onClick={onMenuClick}>
@@ -46,6 +64,7 @@ export const Navbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
+            key="mobile-menu" // Add a key to the motion.div
             initial={{ opacity: 0, x: -200 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -200 }}
@@ -72,10 +91,12 @@ export const Navbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
             <Button variant="ghost" className="w-full justify-start">
               Contact
             </Button>
-            <Button className="w-full">Sign Out</Button>
+            <LogoutButton />
           </motion.div>
         )}
       </AnimatePresence>
     </>
   );
 };
+
+export default Navbar;
