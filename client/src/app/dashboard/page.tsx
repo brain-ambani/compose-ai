@@ -1,163 +1,121 @@
-"use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { Mail, FileText, X, Edit } from "lucide-react";
-import { Navbar } from "./components/Navbar";
-import { AnimatePresence, motion } from "framer-motion";
-import { Tutorial } from "./components/Tutorial";
-import { EmailActionCard } from "./components/EmailActionCard";
-import { Label } from "@/components/ui/label";
-const DashboardPage = () => {
-  const [topic, setTopic] = useState("");
-  const [email, setEmail] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [tone, setTone] = useState<"Formal" | "Friendly" | "Persuasive">(
-    "Formal"
-  );
-  const [generatedEmail, setGeneratedEmail] = useState("");
-  const [summary, setSummary] = useState("");
-  const [improvedEmail, setImprovedEmail] = useState("");
-  const [loading, setLoading] = useState<{
-    generate: boolean;
-    summarize: boolean;
-    improve: boolean;
-  }>({
-    generate: false,
-    summarize: false,
-    improve: false,
-  });
-  const [error, setError] = useState<{
-    generate?: string;
-    summarize?: string;
-    improve?: string;
-  } | null>(null);
-  const [showTutorial, setShowTutorial] = useState(true);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+import Link from "next/link";
+import { Rocket, ImagePlus, BookOpen, Film } from "lucide-react"; // Icons for features
+import NavBar from "@/components/Navbar";
 
-  // Mock user settings (replace with actual user data)
-  const [userTonePreference, setUserTonePreference] = useState<
-    "Formal" | "Friendly" | "Persuasive"
-  >("Formal");
-
-  // Example of using the user preference.
-  useEffect(() => {
-    setTone(userTonePreference); // set initial tone.
-  }, [userTonePreference]);
-
-  const dismissTutorial = () => {
-    setShowTutorial(false);
-  };
-
-  const toggleSettings = () => {
-    setIsSettingsOpen(!isSettingsOpen);
-  };
-
+// Footer Component
+const Footer = () => {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar onMenuClick={toggleSettings} />
-      <main className="flex-1 p-6">
-        <AnimatePresence>
-          {showTutorial && <Tutorial onDismiss={dismissTutorial} />}
-        </AnimatePresence>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Email Writing Card */}
-          <EmailActionCard
-            title="Write Email"
-            description="Enter a topic and choose a tone to generate an email draft."
-            icon={<Mail className="w-5 h-5 text-blue-500" />}
-            // action={generateEmail}
-            dataKeyName="topic"
-            data={topic}
-            setData={setTopic}
-            result={generatedEmail}
-            setResult={setGeneratedEmail}
-            loading={loading.generate}
-            setLoading={(val) => setLoading({ ...loading, generate: val })}
-            error={error?.generate}
-            setError={(val) => setError({ ...error, generate: val })}
-            inputPlaceholder="Enter email topic"
-          />
-
-          {/* Email Summarization Card */}
-          <EmailActionCard
-            title="Summarize Email"
-            description="Paste an email to get a concise summary."
-            icon={<FileText className="w-5 h-5 text-purple-500" />}
-            // action={summarizeEmail}
-            dataKeyName="email-summary"
-            data={email}
-            setData={setEmail}
-            result={summary}
-            setResult={setSummary}
-            loading={loading.summarize}
-            setLoading={(val) => setLoading({ ...loading, summarize: val })}
-            error={error?.summarize}
-            setError={(val) => setError({ ...error, summarize: val })}
-            inputPlaceholder="Paste email to summarize"
-          />
-
-          {/* Improve Email Card */}
-          <EmailActionCard
-            title="Improve Email"
-            description="Paste an email to get suggestions for clarity and tone."
-            icon={<Edit className="w-5 h-5 text-green-500" />}
-            // action={improveEmail}
-            dataKeyName="email-improve"
-            data={email}
-            setData={setEmail}
-            result={improvedEmail}
-            setResult={setImprovedEmail}
-            loading={loading.improve}
-            setLoading={(val) => setLoading({ ...loading, improve: val })}
-            error={error?.improve}
-            setError={(val) => setError({ ...error, improve: val })}
-            inputPlaceholder="Paste email to improve"
-          />
-        </div>
-      </main>
-      <AnimatePresence>
-        {isSettingsOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: 200 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 200 }}
-            transition={{ duration: 0.3 }}
-            className="fixed top-0 right-0 h-full w-80 bg-white shadow-lg z-50 p-6 space-y-6 overflow-y-auto"
+    <footer className="bg-gray-900 py-8 mt-auto">
+      <div className="container mx-auto px-4 text-center text-gray-400">
+        <p className="mb-4">
+          &copy; {new Date().getFullYear()} AI YouTube Automation SaaS. All
+          rights reserved.
+        </p>
+        <div className="flex justify-center gap-6">
+          <Link
+            href="/pricing"
+            className="hover:text-purple-300 transition-colors"
           >
-            <div className="flex items-center justify-between border-b pb-4">
-              <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-                {/* <Settings className="w-6 h-6" /> */}
-                Settings
+            Pricing
+          </Link>
+          <Link
+            href="/support"
+            className="hover:text-purple-300 transition-colors"
+          >
+            Support
+          </Link>
+          <Link
+            href="/terms"
+            className="hover:text-purple-300 transition-colors"
+          >
+            Terms of Service
+          </Link>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+const Dashboard = () => {
+  return (
+    <div className="bg-gray-800 text-white min-h-screen flex flex-col">
+      {/* NavBar */}
+      <NavBar />
+
+      {/* Dashboard Header */}
+      <div className="container mx-auto px-4 py-10">
+        <h1 className="text-4xl font-bold text-center mb-8">Your Dashboard</h1>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* AI Title & Description */}
+          <div className="bg-white/5 p-6 rounded-lg shadow-lg hover:shadow-xl">
+            <div className="flex items-center gap-4">
+              <Rocket className="w-8 h-8 text-purple-400" />
+              <h2 className="text-xl font-semibold">AI Title & Description</h2>
+            </div>
+            <p className="text-gray-300 mt-2">
+              Create catchy titles and descriptions for your YouTube videos in
+              seconds.
+            </p>
+            <Link href="/generate-title-description">
+              <Button className="mt-4">Generate Now</Button>
+            </Link>
+          </div>
+
+          {/* Thumbnail Generator */}
+          <div className="bg-white/5 p-6 rounded-lg shadow-lg hover:shadow-xl">
+            <div className="flex items-center gap-4">
+              <ImagePlus className="w-8 h-8 text-purple-400" />
+              <h2 className="text-xl font-semibold">Thumbnail Generator</h2>
+            </div>
+            <p className="text-gray-300 mt-2">
+              Design stunning thumbnails to increase your video click-through
+              rates.
+            </p>
+            <Link href="/generate-thumbnail">
+              <Button className="mt-4">Generate Now</Button>
+            </Link>
+          </div>
+
+          {/* Script Generator */}
+          <div className="bg-white/5 p-6 rounded-lg shadow-lg hover:shadow-xl">
+            <div className="flex items-center gap-4">
+              <BookOpen className="w-8 h-8 text-purple-400" />
+              <h2 className="text-xl font-semibold">Script Generator</h2>
+            </div>
+            <p className="text-gray-300 mt-2">
+              Let our AI help you create detailed and engaging video scripts.
+            </p>
+            <Link href="/generate-script">
+              <Button className="mt-4">Generate Now</Button>
+            </Link>
+          </div>
+
+          {/* Video Creation */}
+          <div className="bg-white/5 p-6 rounded-lg shadow-lg hover:shadow-xl">
+            <div className="flex items-center gap-4">
+              <Film className="w-8 h-8 text-purple-400" />
+              <h2 className="text-xl font-semibold">
+                Automated Video Creation
               </h2>
-              <Button variant="ghost" size="icon" onClick={toggleSettings}>
-                <X className="h-6 w-6" />
-              </Button>
             </div>
-            <div className="space-y-4">
-              <h3 className="font-semibold text-gray-700">Email Preferences</h3>
-              <div className="space-y-2">
-                <Label htmlFor="default-tone">Default Tone</Label>
-                <select
-                  id="default-tone"
-                  value={userTonePreference}
-                  onChange={(e) =>
-                    setUserTonePreference(
-                      e.target.value as "Formal" | "Friendly" | "Persuasive"
-                    )
-                  }
-                  className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 transition-colors duration-300"
-                >
-                  <option value="Formal">Formal</option>
-                  <option value="Friendly">Friendly</option>
-                  <option value="Persuasive">Persuasive</option>
-                </select>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <p className="text-gray-300 mt-2">
+              Seamlessly integrate with third-party tools to automate your video
+              creation.
+            </p>
+            <Link href="/create-video">
+              <Button className="mt-4">Create Now</Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
 
-export default DashboardPage;
+export default Dashboard;
